@@ -7,6 +7,8 @@ const canvas = document.getElementById("gl");
 const bubble = document.getElementById("bubble");
 const input = document.getElementById("q");
 const sendBtn = document.getElementById("send");
+const BASE = { w: window.innerWidth, h: window.innerHeight };
+
 
 input.addEventListener("focus", ()=> document.body.classList.add("kbd"));
 input.addEventListener("blur",  ()=> document.body.classList.remove("kbd"));
@@ -65,13 +67,26 @@ loader.load("./models/cat2.glb", (gltf) => {
   alert("cat2.glb の読み込みに失敗。パスとファイル名を確認してね。");
 });
 
-function resize() {
-  renderer.setSize(innerWidth, innerHeight, false);
-  camera.aspect = innerWidth / innerHeight;
+function resize(force = false) {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  const kbd = document.body.classList.contains("kbd"); // input focus中に付ける
+  const looksLikeKeyboard = (w === BASE.w) && (h < BASE.h); // 幅は同じで高さだけ減る
+
+  // 入力中の「高さだけ変わる」リサイズは無視（猫を動かさない）
+  if (!force && kbd && looksLikeKeyboard) return;
+
+  BASE.w = w;
+  BASE.h = h;
+
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
   camera.updateProjectionMatrix();
 }
-addEventListener("resize", resize);
-resize();
+window.addEventListener("resize", () => resize(false));
+resize(true);
+
 
 const logEl = document.getElementById("log");
 const fxEl  = document.getElementById("fx");
@@ -122,7 +137,7 @@ function updateBubblePosition() {
     p.project(camera);
     const x = (p.x * 0.5 + 0.5) * innerWidth;
     const y = (-p.y * 0.5 + 0.5) * innerHeight;
-    bubble.style.left = `${x}px`;
+    bubble.style.left = `${x+40}px`;
     bubble.style.top  = `${y}px`;
   }
 
