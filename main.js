@@ -10,10 +10,14 @@ const sendBtn = document.getElementById("send");
 const BASE = { w: window.innerWidth, h: window.innerHeight };
 
 
-input.addEventListener("focus", ()=> document.body.classList.add("kbd"));
-input.addEventListener("blur",  ()=> document.body.classList.remove("kbd"));
-
-
+input.addEventListener("focus", () => {
+  document.body.classList.add("kbd");
+  updateKeyboardOffset();
+});
+input.addEventListener("blur", () => {
+  document.body.classList.remove("kbd");
+  updateKeyboardOffset();
+});
 
 async function startCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
@@ -331,19 +335,46 @@ function loop(time) {
   renderer.render(scene, camera);
 }
 
-function updateVVH(){
-  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+function updateVVH(force = false) {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const kbd = document.body.classList.contains("kbd");
+  const looksLikeKeyboard = (w === BASE.w) && (h < BASE.h);
+
+  if (!force && kbd && looksLikeKeyboard) return;
+
+  BASE.w = w;
+  BASE.h = h;
   document.documentElement.style.setProperty("--vvh", `${h}px`);
 }
-updateVVH();
-window.addEventListener("resize", updateVVH);
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", updateVVH);
-  // window.visualViewport.addEventListener("scroll", updateVVH); ← これを消す
+
+function updateKeyboardOffset() {
+  if (!window.visualViewport) {
+    document.documentElement.style.setProperty("--kbd", "0px");
+    return;
+  }
+
+  const kbd = document.body.classList.contains("kbd");
+  if (!kbd) {
+    document.documentElement.style.setProperty("--kbd", "0px");
+    return;
+  }
+
+  const vv = window.visualViewport;
+  const offset = Math.max(0, BASE.h - vv.height - vv.offsetTop);
+  document.documentElement.style.setProperty("--kbd", `${offset}px`);
 }
 
-
-
+updateVVH(true);
+updateKeyboardOffset();
+window.addEventListener("resize", () => {
+  updateVVH(false);
+  updateKeyboardOffset();
+});
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", updateKeyboardOffset);
+  window.visualViewport.addEventListener("scroll", updateKeyboardOffset);
+}
 
 (async function boot() {
   await startCamera();

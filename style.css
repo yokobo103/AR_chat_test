@@ -104,6 +104,7 @@ body.kbd { --panelH: 28vh; }
 :root{
   --vvh: 100vh;     /* JSで上書きされる */
   --panelH: 38vh;   /* 好みで調整。まずは38 */
+  --kbd: 0px;
 }
 
 @supports (height: 100dvh){
@@ -140,6 +141,7 @@ html, body{
   height: var(--panelH);
   display: flex;
   flex-direction: column;
+  transform: translateY(calc(-1 * var(--kbd)));
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255,255,255,0.12);
