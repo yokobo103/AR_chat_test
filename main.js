@@ -92,6 +92,72 @@ function setBubble(text) {
   updateBubblePosition();
 }
 
+
+const logEl = document.getElementById("log");
+const fxEl  = document.getElementById("fx");
+
+function addLog(role, text){
+  const row = document.createElement("div");
+  row.className = "msg";
+  row.innerHTML = `
+    <div class="badge">${role === "user" ? "YOU" : "CAT"}</div>
+    <div class="text"></div>
+  `;
+  row.querySelector(".text").textContent = text;
+  logEl.appendChild(row);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function clampText(s, max=110){
+  if (!s) return s;
+  if (s.length <= max) return s;
+  return s.slice(0, max) + "…（続きは下へ）";
+}
+
+function setBubble(text){
+  bubble.textContent = clampText(text, 110);
+  bubble.classList.remove("hidden");
+  updateBubblePosition();
+}
+
+function showFx(emoji, ms=900){
+  fxEl.textContent = emoji;
+  fxEl.classList.remove("hidden");
+  const until = performance.now() + ms;
+  const tick = () => {
+    if (performance.now() > until) { fxEl.classList.add("hidden"); return; }
+    requestAnimationFrame(tick);
+  };
+  tick();
+}
+
+
+
+function updateBubblePosition() {
+  if (!cat) return;
+
+  // 吹き出し
+  if (!bubble.classList.contains("hidden")) {
+    const p = cat.position.clone(); p.y += 0.45;
+    p.project(camera);
+    const x = (p.x * 0.5 + 0.5) * innerWidth;
+    const y = (-p.y * 0.5 + 0.5) * innerHeight;
+    bubble.style.left = `${x}px`;
+    bubble.style.top  = `${y}px`;
+  }
+
+  // エフェクト（少し上）
+  if (!fxEl.classList.contains("hidden")) {
+    const p2 = cat.position.clone(); p2.y += 0.62;
+    p2.project(camera);
+    const x2 = (p2.x * 0.5 + 0.5) * innerWidth;
+    const y2 = (-p2.y * 0.5 + 0.5) * innerHeight;
+    fxEl.style.left = `${x2}px`;
+    fxEl.style.top  = `${y2}px`;
+  }
+}
+
+
 function setBubbleMood(m) {
   bubble.dataset.mood = m; // CSSで色を変える
 }
@@ -107,12 +173,6 @@ function pop(ms = 300) {
 }
 
 
-// タップで猫を左右にちょい移動（ARっぽい“置ける感”）
-window.addEventListener("pointerdown", (e) => {
-  if (!cat) return;
-  const nx = (e.clientX / innerWidth) * 2 - 1;
-  catAnchor.x = THREE.MathUtils.clamp(nx * 0.35, -0.35, 0.35);
-});
 
 // 猫の疑似アニメ（Blender不要）
 function animateCat(time) {
@@ -128,9 +188,10 @@ function animateCat(time) {
   }
 
   // ベース（待機）
-  const baseY = catAnchor.y + Math.sin(t * 2.2) * 0.02;
-  const baseRotY = Math.sin(t * 0.7) * 0.18;
-  const baseRotX = Math.sin(t * 1.1) * 0.04;
+    const baseY    = catAnchor.y + Math.sin(t * 1.6) * 0.006; // 呼吸レベル
+    const baseRotY = Math.sin(t * 0.4) * 0.04;               // わずかに揺れる
+    const baseRotX = Math.sin(t * 0.7) * 0.015;              // 首の動き
+
 
   // デフォルト
   let y = baseY;
@@ -231,26 +292,34 @@ function detectMoodFromText(text) {
 }
 
 
-async function onSend() {
+async function onSend(){
   const q = input.value.trim();
-  if (!q) return;
-
+  if(!q) return;
   input.value = "";
+
+  addLog("user", q);
+
   setBubble("…考え中");
+  setMood("neutral", 800);
 
-  setMood("neutral", 800); // 考え中
   await nodOnce();
-  await sleep(350);
+  await sleep(250);
 
-  const answer = dummyAnswer(q);
-  const mood = detectMoodFromText(q + " " + answer);
+  const answer = dummyAnswer(q);          // いまはダミー
+  addLog("cat", answer);
 
-  setMood(mood, 2200);
-  if (mood === "happy" || mood === "surprised") pop(280);
+  const m = detectMoodFromText(q + " " + answer);
+  setMood(m, 2200);
+
+  if (m === "happy") showFx("✨", 900);
+  if (m === "angry") showFx("💢", 900);
+  if (m === "sad") showFx("💧", 900);
+  if (m === "surprised") showFx("❗️", 700);
 
   setBubble(answer);
   await nodOnce();
 }
+
 
 
 sendBtn.addEventListener("click", onSend);

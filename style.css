@@ -96,3 +96,83 @@ html, body {
 #bubble[data-mood="sad"]     { background: rgba(210, 230, 255, 0.95); }
 #bubble[data-mood="surprised"] { background: rgba(235, 220, 255, 0.95); }
 
+
+:root{
+  --panelH: 45vh;
+  --stageH: calc(100vh - var(--panelH));
+}
+
+/* iOSのアドレスバー対策（対応ブラウザでは効く） */
+@supports (height: 100dvh){
+  :root{
+    --panelH: 45dvh;
+    --stageH: calc(100dvh - var(--panelH));
+  }
+}
+
+#hud { display: flex; flex-direction: column; }
+
+#stage{
+  position: fixed;
+  left: 0; right: 0; top: 0;
+  height: var(--stageH);
+  pointer-events: none;
+}
+
+#panel{
+  position: fixed;
+  left: 0; right: 0;
+  top: var(--stageH);
+  height: var(--panelH);
+  display: flex;
+  flex-direction: column;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.12);
+  pointer-events: auto;
+}
+
+#log{
+  flex: 1;
+  overflow: auto;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.msg{
+  margin: 6px 0;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.badge{
+  font-size: 12px;
+  opacity: 0.75;
+  min-width: 2.8em;
+}
+.text{
+  white-space: pre-wrap;
+  line-height: 1.35;
+}
+
+#chatbar{
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+
+#q{ flex: 1; }
+
+/* 吹き出しは上ステージ内に表示される想定 */
+#bubble{ pointer-events: none; }
+
+/* 感情エフェクト（絵文字） */
+#fx{
+  position: fixed;
+  font-size: 28px;
+  transform: translate(-50%, -120%);
+  text-shadow: 0 8px 18px rgba(0,0,0,0.35);
+  pointer-events: none;
+}
+

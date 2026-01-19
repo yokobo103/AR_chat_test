@@ -15,17 +15,21 @@
 
   <!-- UI -->
   <div id="hud">
-    <div id="bubble" class="hidden"></div>
-
-    <div id="chatbar">
-      <input id="q" type="text" placeholder="猫に質問してみて…" autocomplete="off" />
-      <button id="send">送信</button>
+    <div id="stage">
+      <div id="bubble" class="hidden"></div>
+      <div id="fx" class="hidden"></div>
     </div>
 
-    <div id="hint">
-      📷 背面カメラ＋猫＋吹き出し（疑似AR） / タップで猫の位置を少し動かせます
+    <div id="panel">
+      <div id="log"></div>
+
+      <div id="chatbar">
+        <input id="q" type="text" placeholder="猫に質問してみて…" autocomplete="off" />
+        <button id="send">送信</button>
+      </div>
     </div>
   </div>
+
 
   <script type="importmap">
 {
