@@ -37,7 +37,7 @@ let cat = null;
 let mood = "neutral"; // neutral | happy | angry | sad | surprised
 let moodUntil = 0;
 let popUntil = 0;     // ぴょん演出の終了時刻
-let catAnchor = new THREE.Vector3(0, -0.18, -1.2); // 初期位置（カメラ前方）
+let catAnchor = new THREE.Vector3(-0.35, 0.15, -1.2); // 初期位置（カメラ前方）
 let t0 = performance.now();
 
 // 猫ロード
@@ -318,8 +318,9 @@ updateVVH();
 window.addEventListener("resize", updateVVH);
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", updateVVH);
-  window.visualViewport.addEventListener("scroll", updateVVH);
+  // window.visualViewport.addEventListener("scroll", updateVVH); ← これを消す
 }
+
 
 
 
