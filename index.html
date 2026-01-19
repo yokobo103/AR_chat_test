@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Yokobo AR Chat Cat (Pseudo AR)</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- カメラ -->
+  <video id="cam" autoplay playsinline muted></video>
+
+  <!-- Three.js -->
+  <canvas id="gl"></canvas>
+
+  <!-- UI -->
+  <div id="hud">
+    <div id="bubble" class="hidden"></div>
+
+    <div id="chatbar">
+      <input id="q" type="text" placeholder="猫に質問してみて…" autocomplete="off" />
+      <button id="send">送信</button>
+    </div>
+
+    <div id="hint">
+      📷 背面カメラ＋猫＋吹き出し（疑似AR） / タップで猫の位置を少し動かせます
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: -apple-system, system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+#cam, #gl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#gl { pointer-events: none; } /* UIの操作を邪魔しない */
+
+#hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+#chatbar {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+#q {
+  flex: 1;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 16px;
+}
+
+#send {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 16px;
+}
+
+#hint {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(64px + env(safe-area-inset-bottom));
+  color: rgba(255,255,255,0.75);
+  font-size: 12px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+}
+
+#bubble {
+  position: fixed;
+  max-width: min(320px, 78vw);
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.92);
+  color: #111;
+  font-size: 14px;
+  line-height: 1.35;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+#bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 16px;
+  height: 16px;
+  background: rgba(255,255,255,0.92);
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 2px;
+}
+
+.hidden { display: none; }
