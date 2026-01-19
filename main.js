@@ -130,6 +130,7 @@ function showFx(emoji, ms=900){
 
 function updateBubblePosition() {
   if (!cat) return;
+  if (document.body.classList.contains("kbd")) return; // ←追加
 
   // 吹き出し
   if (!bubble.classList.contains("hidden")) {

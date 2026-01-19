@@ -9,13 +9,14 @@ html, body {
 body.kbd { --panelH: 28vh; }
 
 
-#cam, #gl {
+#cam, #gl{
   position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  left: 0; top: 0;
+  width: 100vw;
+  height: var(--vvh);
+  object-fit: cover; /* videoに重要 */
 }
+
 
 #gl { pointer-events: none; } /* UIの操作を邪魔しない */
 
