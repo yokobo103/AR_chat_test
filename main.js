@@ -34,6 +34,9 @@ dir.position.set(1.2, 1.8, 1.0);
 scene.add(dir);
 
 let cat = null;
+let mood = "neutral"; // neutral | happy | angry | sad | surprised
+let moodUntil = 0;
+let popUntil = 0;     // ぴょん演出の終了時刻
 let catAnchor = new THREE.Vector3(0, -0.35, -1.2); // 初期位置（カメラ前方）
 let t0 = performance.now();
 
@@ -89,6 +92,21 @@ function setBubble(text) {
   updateBubblePosition();
 }
 
+function setBubbleMood(m) {
+  bubble.dataset.mood = m; // CSSで色を変える
+}
+
+function setMood(m, ms = 1800) {
+  mood = m;
+  moodUntil = performance.now() + ms;
+  setBubbleMood(m);
+}
+
+function pop(ms = 300) {
+  popUntil = performance.now() + ms;
+}
+
+
 // タップで猫を左右にちょい移動（ARっぽい“置ける感”）
 window.addEventListener("pointerdown", (e) => {
   if (!cat) return;
@@ -99,16 +117,72 @@ window.addEventListener("pointerdown", (e) => {
 // 猫の疑似アニメ（Blender不要）
 function animateCat(time) {
   if (!cat) return;
+
+  const now = performance.now();
   const t = (time - t0) / 1000;
 
-  // idle: ふわふわ + わずかに揺れる
-  cat.position.x = catAnchor.x;
-  cat.position.y = catAnchor.y + Math.sin(t * 2.2) * 0.02;
+  // moodの期限が切れたらneutralへ戻す
+  if (mood !== "neutral" && now > moodUntil) {
+    mood = "neutral";
+    setBubbleMood("neutral");
+  }
+
+  // ベース（待機）
+  const baseY = catAnchor.y + Math.sin(t * 2.2) * 0.02;
+  const baseRotY = Math.sin(t * 0.7) * 0.18;
+  const baseRotX = Math.sin(t * 1.1) * 0.04;
+
+  // デフォルト
+  let y = baseY;
+  let rx = baseRotX;
+  let ry = baseRotY;
+  let shakeX = 0;
+  let shakeY = 0;
+  let scale = 0.6;
+
+  // ぴょん（pop）
+  if (now < popUntil) {
+    const u = 1 - (popUntil - now) / 300;
+    const jump = Math.sin(u * Math.PI) * 0.06;
+    y += jump;
+    scale *= 1.08;
+  }
+
+  // 感情ごとの上書き
+  if (mood === "happy") {
+    y += Math.sin(t * 6.0) * 0.01;
+    ry += Math.sin(t * 2.4) * 0.12;
+    scale *= 1.06;
+  } else if (mood === "angry") {
+    // 小刻み震え + ちょい前のめり
+    shakeX = (Math.random() - 0.5) * 0.01;
+    shakeY = (Math.random() - 0.5) * 0.01;
+    rx += 0.12;
+    ry *= 0.4;
+    scale *= 1.02;
+  } else if (mood === "sad") {
+    y -= 0.03;
+    rx -= 0.10;
+    ry *= 0.2;
+    scale *= 0.98;
+  } else if (mood === "surprised") {
+    // びくっ（短時間向け）
+    scale *= 1.10;
+    rx -= 0.08;
+    ry += 0.22;
+  }
+
+  // 反映
+  cat.position.x = catAnchor.x + shakeX;
+  cat.position.y = y + shakeY;
   cat.position.z = catAnchor.z;
 
-  cat.rotation.y = Math.sin(t * 0.7) * 0.18;
-  cat.rotation.x = Math.sin(t * 1.1) * 0.04;
+  cat.rotation.x = rx;
+  cat.rotation.y = ry;
+
+  cat.scale.setScalar(scale);
 }
+
 
 // 返答中のうなずき演出
 async function nodOnce() {
@@ -128,17 +202,34 @@ async function nodOnce() {
 function dummyAnswer(q) {
   const s = q.toLowerCase();
 
-  if (s.includes("colab") || s.includes("gpu") || s.includes("t4")) {
-    return "ColabはGPUが使えて便利だけど、VRAM制約と実行時間制限が先に来がち。まずは小さく動く最小構成→計測→削る、が安定だよ。";
+  if (s.includes("ar")) {
+    return "ARは“置けた感”が出ると一気に楽しくなるよ。まず疑似ARで体験を作ろう。";
   }
-  if (s.includes("kaggle")) {
-    return "Kaggleは『再現性のある環境＋公開ノート』が強み。まずはE2Eで1回提出できる形にして、あとから特徴量を足すのが勝ち筋。";
+  if (s.includes("blender")) {
+    return "BlenderはIdle1本だけ付けるのが最短。完璧を狙わないのがコツ。";
   }
-  if (s.includes("ar") || s.includes("blender")) {
-    return "ARは“置けた感”が出ると一気に楽しい。BlenderはIdle1本だけ付けるのが最短。まず疑似ARで体験を作って、後で本物ARに寄せよう。";
-  }
-  return "なるほど。要点を1つに絞ると『まず動く形を作ってから賢くする』のが一番速いよ。もう一段具体化する？";
+  return "なるほど。もう少し詳しく聞かせて。";
 }
+
+
+function detectMoodFromText(text) {
+  const t = text.toLowerCase();
+
+  if (t.includes("ありがとう") || t.includes("すごい") || t.includes("助かる")) {
+    return "happy";
+  }
+  if (t.includes("だめ") || t.includes("無理") || t.includes("怒")) {
+    return "angry";
+  }
+  if (t.includes("つら") || t.includes("悲") || t.includes("しんど")) {
+    return "sad";
+  }
+  if (t.includes("え") || t.includes("まじ") || t.includes("驚")) {
+    return "surprised";
+  }
+  return "neutral";
+}
+
 
 async function onSend() {
   const q = input.value.trim();
@@ -146,14 +237,21 @@ async function onSend() {
 
   input.value = "";
   setBubble("…考え中");
+
+  setMood("neutral", 800); // 考え中
   await nodOnce();
   await sleep(350);
 
-  // Phase1: ダミー応答
-  const a = dummyAnswer(q);
-  setBubble(a);
+  const answer = dummyAnswer(q);
+  const mood = detectMoodFromText(q + " " + answer);
+
+  setMood(mood, 2200);
+  if (mood === "happy" || mood === "surprised") pop(280);
+
+  setBubble(answer);
   await nodOnce();
 }
+
 
 sendBtn.addEventListener("click", onSend);
 input.addEventListener("keydown", (e) => {

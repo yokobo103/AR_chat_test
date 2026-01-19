@@ -88,3 +88,11 @@ html, body {
 }
 
 .hidden { display: none; }
+
+
+#bubble[data-mood="neutral"] { background: rgba(255,255,255,0.92); }
+#bubble[data-mood="happy"]   { background: rgba(255, 255, 200, 0.95); }
+#bubble[data-mood="angry"]   { background: rgba(255, 210, 210, 0.95); }
+#bubble[data-mood="sad"]     { background: rgba(210, 230, 255, 0.95); }
+#bubble[data-mood="surprised"] { background: rgba(235, 220, 255, 0.95); }
+
