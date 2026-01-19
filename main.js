@@ -68,26 +68,6 @@ function resize() {
 addEventListener("resize", resize);
 resize();
 
-// 3D→2D投影して吹き出し追従
-function updateBubblePosition() {
-  if (!cat || bubble.classList.contains("hidden")) return;
-
-  const p = cat.position.clone();
-  p.y += 0.45; // 猫の頭上
-  p.project(camera);
-
-  // 画面外なら隠す
-  if (p.z < -1 || p.z > 1) { bubble.classList.add("hidden"); return; }
-
-  const x = (p.x * 0.5 + 0.5) * innerWidth;
-  const y = (-p.y * 0.5 + 0.5) * innerHeight;
-
-  bubble.style.left = `${x}px`;
-  bubble.style.top = `${y}px`;
-}
-
-
-
 const logEl = document.getElementById("log");
 const fxEl  = document.getElementById("fx");
 
