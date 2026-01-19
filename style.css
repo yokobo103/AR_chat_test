@@ -98,26 +98,36 @@ html, body {
 
 
 :root{
-  --panelH: 45vh;
-  --stageH: calc(100vh - var(--panelH));
+  --vvh: 100vh;     /* JSで上書きされる */
+  --panelH: 38vh;   /* 好みで調整。まずは38 */
 }
 
-/* iOSのアドレスバー対策（対応ブラウザでは効く） */
 @supports (height: 100dvh){
-  :root{
-    --panelH: 45dvh;
-    --stageH: calc(100dvh - var(--panelH));
-  }
+  :root{ --vvh: 100dvh; } /* JSが効かない環境の保険 */
 }
 
-#hud { display: flex; flex-direction: column; }
+html, body{
+  height: var(--vvh);
+}
+#cam, #gl{
+  height: var(--vvh);
+}
 
+/* ここが大事：panelは bottom固定 */
+#panel{
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: var(--panelH);
+  top: auto; /* ← top指定が残ってると押し上げ事故りやすい */
+}
+
+/* stage は panel を除いた高さ */
 #stage{
   position: fixed;
   left: 0; right: 0; top: 0;
-  height: var(--stageH);
-  pointer-events: none;
+  height: calc(var(--vvh) - var(--panelH));
 }
+
 
 #panel{
   position: fixed;

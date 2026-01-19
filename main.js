@@ -37,7 +37,7 @@ let cat = null;
 let mood = "neutral"; // neutral | happy | angry | sad | surprised
 let moodUntil = 0;
 let popUntil = 0;     // ぴょん演出の終了時刻
-let catAnchor = new THREE.Vector3(0, -0.35, -1.2); // 初期位置（カメラ前方）
+let catAnchor = new THREE.Vector3(0, -0.18, -1.2); // 初期位置（カメラ前方）
 let t0 = performance.now();
 
 // 猫ロード
@@ -309,6 +309,19 @@ function loop(time) {
   updateBubblePosition();
   renderer.render(scene, camera);
 }
+
+function updateVVH(){
+  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  document.documentElement.style.setProperty("--vvh", `${h}px`);
+}
+updateVVH();
+window.addEventListener("resize", updateVVH);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", updateVVH);
+  window.visualViewport.addEventListener("scroll", updateVVH);
+}
+
+
 
 (async function boot() {
   await startCamera();
