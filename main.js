@@ -86,11 +86,6 @@ function updateBubblePosition() {
   bubble.style.top = `${y}px`;
 }
 
-function setBubble(text) {
-  bubble.textContent = text;
-  bubble.classList.remove("hidden");
-  updateBubblePosition();
-}
 
 
 const logEl = document.getElementById("log");
