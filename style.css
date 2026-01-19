@@ -6,6 +6,9 @@ html, body {
   font-family: -apple-system, system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif;
 }
 
+body.kbd { --panelH: 28vh; }
+
+
 #cam, #gl {
   position: fixed;
   inset: 0;

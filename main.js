@@ -8,6 +8,11 @@ const bubble = document.getElementById("bubble");
 const input = document.getElementById("q");
 const sendBtn = document.getElementById("send");
 
+input.addEventListener("focus", ()=> document.body.classList.add("kbd"));
+input.addEventListener("blur",  ()=> document.body.classList.remove("kbd"));
+
+
+
 async function startCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
     video: { facingMode: { ideal: "environment" } },
