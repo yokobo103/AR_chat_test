@@ -9,6 +9,10 @@ const input = document.getElementById("q");
 const sendBtn = document.getElementById("send");
 const BASE = { w: window.innerWidth, h: window.innerHeight };
 
+function isKeyboardActive() {
+  return document.body.classList.contains("kbd") || document.activeElement === input;
+}
+
 
 input.addEventListener("focus", () => {
   document.body.classList.add("kbd");
@@ -75,7 +79,7 @@ function resize(force = false) {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
-  const kbd = document.body.classList.contains("kbd"); // input focus中に付ける
+  const kbd = isKeyboardActive(); // input focus中に付ける
   const looksLikeKeyboard = (w === BASE.w) && (h < BASE.h); // 幅は同じで高さだけ減る
 
   // 入力中の「高さだけ変わる」リサイズは無視（猫を動かさない）
@@ -134,14 +138,14 @@ function showFx(emoji, ms=900){
 
 function updateBubblePosition() {
   if (!cat) return;
-  if (document.body.classList.contains("kbd")) return; // ←追加
+  if (isKeyboardActive()) return; // ←追加
 
   // 吹き出し
   if (!bubble.classList.contains("hidden")) {
     const p = cat.position.clone(); p.y += 0.45;
     p.project(camera);
-    const x = (p.x * 0.5 + 0.5) * innerWidth;
-    const y = (-p.y * 0.5 + 0.5) * innerHeight;
+    const x = (p.x * 0.5 + 0.5) * BASE.w;
+    const y = (-p.y * 0.5 + 0.5) * BASE.h;
     bubble.style.left = `${x+40}px`;
     bubble.style.top  = `${y}px`;
   }
@@ -150,8 +154,8 @@ function updateBubblePosition() {
   if (!fxEl.classList.contains("hidden")) {
     const p2 = cat.position.clone(); p2.y += 0.62;
     p2.project(camera);
-    const x2 = (p2.x * 0.5 + 0.5) * innerWidth;
-    const y2 = (-p2.y * 0.5 + 0.5) * innerHeight;
+    const x2 = (p2.x * 0.5 + 0.5) * BASE.w;
+    const y2 = (-p2.y * 0.5 + 0.5) * BASE.h;
     fxEl.style.left = `${x2}px`;
     fxEl.style.top  = `${y2}px`;
   }
@@ -338,7 +342,7 @@ function loop(time) {
 function updateVVH(force = false) {
   const w = window.innerWidth;
   const h = window.innerHeight;
-  const kbd = document.body.classList.contains("kbd");
+  const kbd = isKeyboardActive();
   const looksLikeKeyboard = (w === BASE.w) && (h < BASE.h);
 
   if (!force && kbd && looksLikeKeyboard) return;
