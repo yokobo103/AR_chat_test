@@ -82,10 +82,6 @@ body {
   --kbd: 0px;
 }
 
-@supports (height: 100dvh){
-  :root{ --vvh: 100dvh; } /* JSが効かない環境の保険 */
-}
-
 html, body{
   height: var(--vvh);
 }

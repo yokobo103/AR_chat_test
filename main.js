@@ -24,10 +24,12 @@ function isKeyboardResize(w, h) {
 
 input.addEventListener("focus", () => {
   document.body.classList.add("kbd");
+  document.documentElement.style.setProperty("--vvh", `${BASE.h}px`);
   updateKeyboardOffset();
 });
 input.addEventListener("blur", () => {
   document.body.classList.remove("kbd");
+  updateVVH(true);
   updateKeyboardOffset();
 });
 
