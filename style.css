@@ -78,7 +78,7 @@ body {
 
 :root{
   --vvh: 100vh;     /* JSで上書きされる */
-  --panelH: 38vh;   /* 好みで調整。まずは38 */
+  --panelH: calc(var(--vvh) * 0.34);   /* 好みで調整。まずは34% */
   --kbd: 0px;
 }
 
@@ -140,7 +140,7 @@ html, body{
   gap: 8px;
   padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
   pointer-events: auto;
-  transform: translateY(calc(-1 * var(--kbd)));
+  order: -1;
 }
 
 #q{
