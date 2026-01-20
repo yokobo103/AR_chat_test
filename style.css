@@ -26,34 +26,6 @@ body.kbd { --panelH: 28vh; }
   pointer-events: none;
 }
 
-#chatbar {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: calc(12px + env(safe-area-inset-bottom));
-  display: flex;
-  gap: 8px;
-  pointer-events: auto;
-}
-
-#q {
-  flex: 1;
-  padding: 12px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(0,0,0,0.55);
-  color: #fff;
-  font-size: 16px;
-}
-
-#send {
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.12);
-  color: #fff;
-  font-size: 16px;
-}
 
 #hint {
   position: fixed;
@@ -119,13 +91,6 @@ html, body{
 }
 
 /* ここが大事：panelは bottom固定 */
-#panel{
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: var(--panelH);
-  top: auto; /* ← top指定が残ってると押し上げ事故りやすい */
-}
-
 /* stage は panel を除いた高さ */
 #stage{
   position: fixed;
@@ -133,15 +98,14 @@ html, body{
   height: calc(var(--vvh) - var(--panelH));
 }
 
-
 #panel{
   position: fixed;
-  left: 0; right: 0;
-  top: var(--stageH);
+  left: 0;
+  right: 0;
+  bottom: 0;
   height: var(--panelH);
   display: flex;
   flex-direction: column;
-  transform: translateY(calc(-1 * var(--kbd)));
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255,255,255,0.12);
@@ -176,9 +140,28 @@ html, body{
   display: flex;
   gap: 8px;
   padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  pointer-events: auto;
+  transform: translateY(calc(-1 * var(--kbd)));
 }
 
-#q{ flex: 1; }
+#q{
+  flex: 1;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 16px;
+}
+
+#send{
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 16px;
+}
 
 /* 吹き出しは上ステージ内に表示される想定 */
 #bubble{ pointer-events: none; }
@@ -191,4 +174,3 @@ html, body{
   text-shadow: 0 8px 18px rgba(0,0,0,0.35);
   pointer-events: none;
 }
-
