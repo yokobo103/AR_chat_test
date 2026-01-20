@@ -42,7 +42,9 @@ body {
 
 #bubble {
   position: absolute;
-  max-width: min(320px, 78vw);
+  width: fit-content;
+  max-width: min(340px, 82vw);
+  max-height: min(40vh, 320px);
   padding: 10px 12px;
   border-radius: 14px;
   background: rgba(255,255,255,0.92);
@@ -52,6 +54,8 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.35);
   transform: translate(-50%, -100%);
   pointer-events: none;
+  overflow-y: auto;
+  word-break: break-word;
 }
 
 #bubble::after {
@@ -114,6 +118,7 @@ html, body{
 #log{
   flex: 1;
   overflow: auto;
+  overflow-x: hidden;
   padding: 10px 12px;
   color: #fff;
   font-size: 14px;
@@ -176,4 +181,32 @@ html, body{
   transform: translate(-50%, -120%);
   text-shadow: 0 8px 18px rgba(0,0,0,0.35);
   pointer-events: none;
+}
+
+#new-chat{
+  position: absolute;
+  right: 16px;
+  bottom: calc(var(--panelH) + 16px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  pointer-events: auto;
+}
+
+#new-chat .paw{
+  font-size: 16px;
+  line-height: 1;
+}
+
+#new-chat:active{
+  transform: translateY(1px);
 }
