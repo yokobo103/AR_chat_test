@@ -7,6 +7,7 @@ const canvas = document.getElementById("gl");
 const bubble = document.getElementById("bubble");
 const input = document.getElementById("q");
 const sendBtn = document.getElementById("send");
+const newChatBtn = document.getElementById("new-chat");
 const BASE = { w: window.innerWidth, h: window.innerHeight };
 
 function isKeyboardActive() {
@@ -62,7 +63,7 @@ let cat = null;
 let mood = "neutral"; // neutral | happy | angry | sad | surprised
 let moodUntil = 0;
 let popUntil = 0;     // ぴょん演出の終了時刻
-let catAnchor = new THREE.Vector3(-0.35, 0.15, -1.2); // 初期位置（カメラ前方）
+let catAnchor = new THREE.Vector3(-0.48, 0.02, -1.2); // 初期位置（カメラ前方）
 let t0 = performance.now();
 
 // 猫ロード
@@ -118,14 +119,8 @@ function addLog(role, text){
   logEl.scrollTop = logEl.scrollHeight;
 }
 
-function clampText(s, max=110){
-  if (!s) return s;
-  if (s.length <= max) return s;
-  return s.slice(0, max) + "…（続きは下へ）";
-}
-
 function setBubble(text){
-  bubble.textContent = clampText(text, 110);
+  bubble.textContent = text;
   bubble.classList.remove("hidden");
   updateBubblePosition();
 }
@@ -334,6 +329,11 @@ async function onSend(){
 
 
 sendBtn.addEventListener("click", onSend);
+newChatBtn.addEventListener("click", () => {
+  logEl.innerHTML = "";
+  setMood("neutral", 800);
+  setBubble("新しいチャットを始めよう。");
+});
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") onSend();
 });
