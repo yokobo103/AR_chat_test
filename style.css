@@ -138,9 +138,13 @@ html, body{
 #chatbar{
   display: flex;
   gap: 8px;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  padding: calc(10px + env(safe-area-inset-top)) 12px 10px;
   pointer-events: auto;
-  order: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
 }
 
 #q{
