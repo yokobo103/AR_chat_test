@@ -6,8 +6,6 @@ html, body {
   font-family: -apple-system, system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif;
 }
 
-body.kbd { --panelH: 28vh; }
-
 body {
   position: relative;
 }
@@ -25,8 +23,9 @@ body {
 #gl { pointer-events: none; } /* UIの操作を邪魔しない */
 
 #hud {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  height: var(--vvh);
   pointer-events: none;
 }
 
