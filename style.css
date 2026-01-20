@@ -8,9 +8,13 @@ html, body {
 
 body.kbd { --panelH: 28vh; }
 
+body {
+  position: relative;
+}
+
 
 #cam, #gl{
-  position: fixed;
+  position: absolute;
   left: 0; top: 0;
   width: 100vw;
   height: var(--vvh);
@@ -21,7 +25,7 @@ body.kbd { --panelH: 28vh; }
 #gl { pointer-events: none; } /* UIの操作を邪魔しない */
 
 #hud {
-  position: fixed;
+  position: absolute;
   inset: 0;
   pointer-events: none;
 }
@@ -38,7 +42,7 @@ body.kbd { --panelH: 28vh; }
 }
 
 #bubble {
-  position: fixed;
+  position: absolute;
   max-width: min(320px, 78vw);
   padding: 10px 12px;
   border-radius: 14px;
@@ -93,13 +97,13 @@ html, body{
 /* ここが大事：panelは bottom固定 */
 /* stage は panel を除いた高さ */
 #stage{
-  position: fixed;
+  position: absolute;
   left: 0; right: 0; top: 0;
   height: calc(var(--vvh) - var(--panelH));
 }
 
 #panel{
-  position: fixed;
+  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
@@ -168,7 +172,7 @@ html, body{
 
 /* 感情エフェクト（絵文字） */
 #fx{
-  position: fixed;
+  position: absolute;
   font-size: 28px;
   transform: translate(-50%, -120%);
   text-shadow: 0 8px 18px rgba(0,0,0,0.35);

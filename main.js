@@ -13,6 +13,14 @@ function isKeyboardActive() {
   return document.body.classList.contains("kbd") || document.activeElement === input;
 }
 
+function isKeyboardResize(w, h) {
+  const looksLikeKeyboard = (w === BASE.w) && (h < BASE.h);
+  const hasViewportShrink = window.visualViewport
+    ? window.visualViewport.height < BASE.h
+    : false;
+  return looksLikeKeyboard && (isKeyboardActive() || hasViewportShrink);
+}
+
 
 input.addEventListener("focus", () => {
   document.body.classList.add("kbd");
@@ -79,11 +87,8 @@ function resize(force = false) {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
-  const kbd = isKeyboardActive(); // input focus中に付ける
-  const looksLikeKeyboard = (w === BASE.w) && (h < BASE.h); // 幅は同じで高さだけ減る
-
   // 入力中の「高さだけ変わる」リサイズは無視（猫を動かさない）
-  if (!force && kbd && looksLikeKeyboard) return;
+  if (!force && isKeyboardResize(w, h)) return;
 
   BASE.w = w;
   BASE.h = h;
@@ -342,10 +347,8 @@ function loop(time) {
 function updateVVH(force = false) {
   const w = window.innerWidth;
   const h = window.innerHeight;
-  const kbd = isKeyboardActive();
-  const looksLikeKeyboard = (w === BASE.w) && (h < BASE.h);
 
-  if (!force && kbd && looksLikeKeyboard) return;
+  if (!force && isKeyboardResize(w, h)) return;
 
   BASE.w = w;
   BASE.h = h;
